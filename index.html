@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forest Client — лёгкий клиент</title>
+  <meta name="description" content="Forest Client — быстрый и простой клиент для ваших задач. Скачать, установить и начать работать за минуту." />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#1f2937;background:#0f172a}
+    .wrap{max-width:1100px;margin:32px auto;padding:24px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#7c3aed);color:white;font-weight:700}
+    .brand h1{font-size:18px}
+    nav{display:flex;gap:12px}
+    nav a{color:#cbd5e1;text-decoration:none;padding:8px 12px;border-radius:8px}
+    nav a:hover{background:rgba(255,255,255,0.04)}
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;margin-top:28px;align-items:center}
+    .hero .lead{color:#e6eef8}
+    .lead h2{font-size:34px;margin-bottom:12px}
+    .lead p{color:#9fb0c9;margin-bottom:18px}
+    .btn-row{display:flex;gap:12px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:600}
+    .btn.primary{background:#06b6d4;color:#04202a}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#cbd5e1}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:18px;color:#e6eef8;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    .card h3{margin-bottom:6px}
+    .card p{color:#a7c0d8;font-size:14px}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0}
+    .feature{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px}
+    .feature h4{margin-bottom:8px}
+    .feature p{font-size:14px;color:#9fb0c9}
+    .cta{display:flex;align-items:center;justify-content:space-between;padding:20px;background:linear-gradient(90deg,rgba(9,10,22,0.6),rgba(12,13,30,0.4));border-radius:10px}
+    footer{margin-top:36px;color:#9fb0c9;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+    @media (max-width:900px){.hero{grid-template-columns:1fr;}.features{grid-template-columns:1fr 1fr}}
+    @media (max-width:560px){.features{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start;gap:12px}nav{flex-wrap:wrap}}
+    .small{font-size:13px;color:#9fb0c9}
+    .forest-banner{margin-top:30px;padding:16px;background:rgba(34,197,94,0.1);border-left:4px solid #22c55e;border-radius:8px;text-align:center;color:#bbf7d0}
+    .forest-banner a{color:#4ade80;text-decoration:none;font-weight:600}
+    .forest-banner a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">FC</div>
+        <div>
+          <h1>Forest Client</h1>
+          <div class="small">Лёгкий клиент — быстро, безопасно, просто</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#features">Функции</a>
+        <a href="#download">Скачать</a>
+        <a href="#docs">Документация</a>
+        <a href="#contact">Контакты</a>
+        <a href="#login">Войти</a>
+        <a href="#register">Регистрация</a>
+      </nav>
+    </header>
+
+    <div class="forest-banner">
+      🌲 Добро пожаловать в <strong>Forest Client</strong> — подпишись на наш <a href="https://t.me/forestclient" target="_blank">Telegram-канал</a> для новостей и обновлений!
+    </div>
+
+    <div id="authState" class="forest-banner" style="display:none;margin-top:12px">
+      <span id="authStateText"></span>
+      <button id="logoutBtn" class="btn ghost" style="margin-left:12px;padding:6px 10px">Выйти</button>
+    </div>
+
+    <main>
+      <section class="hero">
+        <div class="lead">
+          <h2>Forest Client — бесплатный минималистичный клиент</h2>
+          <p>Быстрая установка, понятный интерфейс и встроенные Функции для пве . Идеален как для новичка так и для продвинутых пользователей.</p>
+          <div class="btn-row">
+            <a class="btn primary" id="downloadBtn" href="downloads/mods.zip" download rel="noopener">Скачать</a>
+            <a class="btn ghost" href="#docs">Читать документацию</a>
+          </div>
+          <div style="margin-top:18px;color:#9fb0c9;font-size:13px">Поддержка Windows </div>
+        </div>
+
+        <aside class="card" id="download">
+          <h3>Текущая версия</h3>
+          <p style="margin-bottom:12px">актуальная версия 0.6 — стабильная сборка с поддержкой всех функций .</p>
+          <div style="display:flex;gap:10px">
+            <a class="btn primary" href="downloads/mods.zip" download rel="noopener">Скачать</a>
+          </div>
+          <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+          <p class="small">Если нужно, могу подготовить страницу с реальными ссылками для конкретного билда или пакетного менеджера.</p>
+        </aside>
+      </section>
+
+      <section id="features" aria-label="features" style="margin:28px 0">
+        <h3 style="color:#e6eef8;margin-bottom:12px">Функции</h3>
+        <div class="card" style="display:grid;grid-template-columns:260px 1fr;gap:16px">
+          <div class="func-list" style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn ghost func-item" data-func="AutoWoodcut">AutoWoodcut</button>
+            <button class="btn ghost func-item" data-func="AutoMiner">AutoMiner</button>
+            <button class="btn ghost func-item" data-func="AutoFarm">AutoFarm</button>
+            <button class="btn ghost func-item" data-func="AutoFish">AutoFish</button>
+            <button class="btn ghost func-item" data-func="Waypoints">Waypoints</button>
+          </div>
+          <div class="func-desc" id="funcDesc" style="min-height:120px">
+            <h4 id="funcTitle" style="margin-bottom:6px;color:#e6eef8">Выберите функцию слева</h4>
+            <p id="funcText" class="small">Нажмите на пункт, чтобы узнать подробности и советы по использованию.</p>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top:18px">
+        <div class="cta">
+          <div>
+            <strong>Готовы начать?</strong>
+            <div class="small">Скачайте и следуйте инструкции по установке — всё займёт пару минут.</div>
+          </div>
+          <div>
+            <a class="btn primary" href="#download" style="padding:12px 20px">Скачать</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="docs" style="margin-top:22px;background:rgba(255,255,255,0.01);padding:16px;border-radius:10px">
+        <h3>Короткая инструкция</h3>
+        <ol style="color:#9fb0c9;margin-top:8px">
+          <li>Скачайте архив для вашей ОС.</li>
+          <li>Распакуйте папку mods.</li>
+          <li>все Jar фaйлы закиньте в моды 1.21.4 версии Tl legacy или Tlauncher </li>
+        </ol>
+      </section>
+
+      <section id="login" style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+        <div class="card">
+          <h3 style="margin-bottom:8px">Вход</h3>
+          <form id="loginForm">
+            <label class="small" for="loginUsername">Имя пользователя</label>
+            <input id="loginUsername" name="username" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8">
+            <label class="small" for="loginPassword">Пароль</label>
+            <input id="loginPassword" name="password" type="password" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8">
+            <div style="display:flex;justify-content:flex-end;margin-top:8px">
+              <button class="btn primary" type="submit">Войти</button>
+            </div>
+          </form>
+          <div id="loginMsg" class="small" style="margin-top:8px;color:#fca5a5;display:none"></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:8px">Регистрация</h3>
+          <form id="registerForm">
+            <label class="small" for="regUsername">Имя пользователя</label>
+            <input id="regUsername" name="username" required minlength="3" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8">
+            <label class="small" for="regPassword">Пароль</label>
+            <input id="regPassword" name="password" type="password" required minlength="6" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8">
+            <label class="small" for="regPassword2">Повторите пароль</label>
+            <input id="regPassword2" name="password2" type="password" required minlength="6" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8">
+            <div style="display:flex;justify-content:flex-end;margin-top:8px">
+              <button class="btn primary" type="submit">Создать аккаунт</button>
+            </div>
+          </form>
+          <div id="registerMsg" class="small" style="margin-top:8px;color:#86efac;display:none"></div>
+        </div>
+      </section>
+
+      <section id="contact" style="margin-top:18px;display:grid;grid-template-columns:1fr 320px;gap:18px">
+        <div style="color:#cbd5e1">
+          <h3>Контакты</h3>
+          <p class="small">Есть вопросы? Напишите на наш тгк @ForestClient</p>
+        </div>
+        <form class="card" onsubmit="event.preventDefault();alert('Форма отправлена (симуляция). Замените на реальный бэкенд)')">
+          <label class="small" for="name">Имя</label>
+          <input id="name" name="name" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8">
+          <label class="small" for="email">Email</label>
+          <input id="email" name="email" type="email" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8">
+          <label class="small" for="msg">Сообщение</label>
+          <textarea id="msg" name="msg" rows="3" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8"></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:8px">
+            <button class="btn primary" type="submit">Отправить</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div>© Forest Client — 2025</div>
+      <div class="small">сайт был сделан нистой для вопросов в тгк@forestclient</div>
+    </footer>
+  </div>
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const href=a.getAttribute('href');
+        if(href.length>1){
+          e.preventDefault();
+          const el=document.querySelector(href);
+          if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+      })
+    })
+
+    const funcInfo={
+      AutoWoodcut:{
+        title:'AutoWoodcut',
+        text:'Отличная функция для PvE: автоматически ищет и рубит деревья, подбирая лут. Настраивается задержка ударов и радиус поиска.'
+      },
+      AutoMine:{
+        title:'AutoMine',
+        text:'сама копает блоки!'
+      },
+      AutoBerry:{
+        title:'AutoBerry',
+        text:'автоматически собирает сладкие ягоды !'
+      },
+      AutoFish:{
+        title:'AutoFish',
+        text:'сама ловит рыбу!'
+      },
+      KillAuras:{
+        title:'KillAura',
+        text:'Топовая киллаура которая не баниться!'
+      }
+    };
+
+    function selectFunc(key){
+      const data=funcInfo[key];
+      if(!data) return;
+      document.querySelectorAll('.func-item').forEach(b=>b.classList.remove('selected'));
+      const btn=document.querySelector(`.func-item[data-func="${key}"]`);
+      if(btn) btn.classList.add('selected');
+      document.getElementById('funcTitle').textContent=data.title;
+      document.getElementById('funcText').textContent=data.text;
+    }
+
+    document.querySelectorAll('.func-item').forEach(b=>{
+      b.addEventListener('click',()=>selectFunc(b.dataset.func))
+    });
+
+    const lsKeyUsers='fc_users';
+    const lsKeyCurrent='fc_current_user';
+    const getUsers=()=>{try{return JSON.parse(localStorage.getItem(lsKeyUsers)||'{}')}catch{return {}}};
+    const setUsers=u=>localStorage.setItem(lsKeyUsers,JSON.stringify(u));
+    const setCurrent=u=>localStorage.setItem(lsKeyCurrent,u||'');
+    const getCurrent=()=>localStorage.getItem(lsKeyCurrent)||'';
+    async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+
+    function updateAuthUI(){
+      const user=getCurrent();
+      const authState=document.getElementById('authState');
+      const text=document.getElementById('authStateText');
+      const loginSec=document.getElementById('login');
+      if(user){
+        text.textContent=`Вы вошли как ${user}`;
+        authState.style.display='block';
+        if(loginSec) loginSec.style.display='none';
+      }else{
+        authState.style.display='none';
+        if(loginSec) loginSec.style.display='grid';
+      }
+    }
+
+    const loginForm=document.getElementById('loginForm');
+    if(loginForm){
+      loginForm.addEventListener('submit',async e=>{
+        e.preventDefault();
+        const u=document.getElementById('loginUsername').value.trim();
+        const p=document.getElementById('loginPassword').value;
+        const users=getUsers();
+        const msg=document.getElementById('loginMsg');
+        msg.style.display='none';
+        if(!u||!p){msg.textContent='Введите имя и пароль';msg.style.display='block';return}
+        const hash=await sha256(p);
+        if(users[u]&&users[u].hash===hash){
+          setCurrent(u);
+          updateAuthUI();
+          loginForm.reset();
+          location.hash='#';
+        }else{
+          msg.textContent='Неверные имя пользователя или пароль';
+          msg.style.display='block';
+        }
+      })
+    }
+
+    const regForm=document.getElementById('registerForm');
+    if(regForm){
+      regForm.addEventListener('submit',async e=>{
+        e.preventDefault();
+        const u=document.getElementById('regUsername').value.trim();
+        const p=document.getElementById('regPassword').value;
+        const p2=document.getElementById('regPassword2').value;
+        const users=getUsers();
+        const ok=document.getElementById('registerMsg');
+        const errColor='#fca5a5';
+        ok.style.display='none';
+        if(u.length<3){ok.textContent='Минимум 3 символа в имени';ok.style.color=errColor;ok.style.display='block';return}
+        if(p.length<6){ok.textContent='Минимум 6 символов в пароле';ok.style.color=errColor;ok.style.display='block';return}
+        if(p!==p2){ok.textContent='Пароли не совпадают';ok.style.color=errColor;ok.style.display='block';return}
+        if(users[u]){ok.textContent='Пользователь уже существует';ok.style.color=errColor;ok.style.display='block';return}
+        const hash=await sha256(p);
+        users[u]={hash};
+        setUsers(users);
+        setCurrent(u);
+        regForm.reset();
+        ok.textContent='Аккаунт создан, вы вошли';
+        ok.style.color='#86efac';
+        ok.style.display='block';
+        updateAuthUI();
+        location.hash='#';
+      })
+    }
+
+    const logoutBtn=document.getElementById('logoutBtn');
+    if(logoutBtn){
+      logoutBtn.addEventListener('click',()=>{setCurrent('');updateAuthUI()})
+    }
+
+    updateAuthUI();
+  </script>
+</body>
+</html>
