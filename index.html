@@ -40,7 +40,6 @@
     .forest-banner a{color:#4ade80;text-decoration:none;font-weight:600}
     .forest-banner a:hover{text-decoration:underline}
     
-    
     .role-badge{display:inline-block;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-left:8px}
     .role-developer{background:linear-gradient(135deg,#7c3aed,#06b6d4);color:white}
     .role-admin{background:linear-gradient(135deg,#dc2626,#ef4444);color:white}
@@ -51,8 +50,13 @@
     .role-user{background:rgba(255,255,255,0.1);color:#cbd5e1}
     
     .admin-panel{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:16px;margin-top:16px}
-    .user-list{max-height:200px;overflow-y:auto;margin:12px 0}
+    .user-list{max-height:300px;overflow-y:auto;margin:12px 0}
     .user-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.02);border-radius:6px;margin-bottom:6px}
+    .user-info{display:flex;align-items:center;gap:8px}
+    .user-details{display:flex;flex-direction:column;gap:2px}
+    .user-login{font-weight:600;color:#e6eef8}
+    .user-password{font-size:11px;color:#9fb0c9;font-family:monospace}
+    .user-date{font-size:10px;color:#64748b}
     .user-actions{display:flex;gap:6px}
     .user-actions select{padding:4px 8px;border-radius:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e6eef8}
     .user-actions button{padding:4px 8px;border-radius:4px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;cursor:pointer}
@@ -119,7 +123,6 @@
         </aside>
       </section>
 
-   
       <section id="profile" style="display:none">
         <h3 style="color:#e6eef8;margin-bottom:12px">Профиль пользователя</h3>
         <div class="profile-section">
@@ -144,23 +147,21 @@
           <div class="card">
             <h4>Доступные функции</h4>
             <div id="availableFeatures" style="margin-top:8px">
-              
             </div>
           </div>
         </div>
 
-    
         <div id="adminPanel" class="admin-panel" style="display:none">
           <h4>Панель управления пользователями</h4>
-          <div class="small">Управление ролями и доступом пользователей</div>
+          <div class="small">Все зарегистрированные пользователи системы</div>
           
           <div class="user-list" id="userList">
-          
           </div>
           
           <div style="margin-top:12px">
             <button class="btn primary" onclick="refreshUserList()">Обновить список</button>
             <button class="btn ghost" onclick="exportUsers()">Экспорт данных</button>
+            <button class="btn ghost" onclick="showAllPasswords()">Показать пароли</button>
           </div>
         </div>
       </section>
@@ -259,7 +260,6 @@
     </footer>
   </div>
   <script>
-  
     const ROLES = {
       'user': { name: 'Пользователь', level: 1 },
       'beta': { name: 'Beta-тестер', level: 2 },
@@ -270,12 +270,10 @@
       'admin': { name: 'Администратор', level: 10 }
     };
 
-  
     const lsKeyUsers = 'fc_users';
     const lsKeyCurrent = 'fc_current_user';
     const lsKeyStats = 'fc_user_stats';
 
-    
     const getUsers = () => {
       try {
         return JSON.parse(localStorage.getItem(lsKeyUsers) || '{}');
@@ -299,12 +297,11 @@
     const setCurrent = (u) => localStorage.setItem(lsKeyCurrent, u || '');
     const getCurrent = () => localStorage.getItem(lsKeyCurrent) || '';
 
-  
     function initializeAdmin() {
       const users = getUsers();
       if (!users['nistaswag']) {
         users['nistaswag'] = {
-          password: 'bestdeveloper', 
+          password: 'bestdeveloper',
           role: 'developer',
           registeredAt: new Date().toISOString()
         };
@@ -317,11 +314,9 @@
           joinDate: new Date().toISOString()
         };
         setStats(stats);
-        console.log('Создан пользователь nistaswag с ролью developer');
       }
     }
 
- 
     function updateAuthUI() {
       const user = getCurrent();
       const authState = document.getElementById('authState');
@@ -345,7 +340,6 @@
         if (registerNav) registerNav.style.display = 'none';
         
         updateProfile(user);
-      
         if (role === 'admin' || role === 'developer') {
           document.getElementById('adminPanel').style.display = 'block';
           refreshUserList();
@@ -362,7 +356,6 @@
       }
     }
 
-  
     function updateProfile(username) {
       const users = getUsers();
       const stats = getStats();
@@ -375,7 +368,6 @@
       document.getElementById('profileUsername').innerHTML = 
         `${username} <span class="role-badge role-${role}">${roleName}</span>`;
       
-      
       const joinDate = new Date(userStats.joinDate || new Date());
       const daysSinceJoin = Math.floor((new Date() - joinDate) / (1000 * 60 * 60 * 24));
       
@@ -383,13 +375,11 @@
       document.getElementById('statDownloads').textContent = userStats.downloads || 0;
       document.getElementById('statRole').textContent = ROLES[role]?.level || 1;
       
-      
       const featuresDiv = document.getElementById('availableFeatures');
       const features = getAvailableFeatures(role);
       featuresDiv.innerHTML = features.map(f => `<div class="small">✓ ${f}</div>`).join('');
     }
 
-   
     function getAvailableFeatures(role) {
       const baseFeatures = ['AutoWoodcut', 'AutoMiner', 'AutoFarm'];
       
@@ -410,7 +400,6 @@
       }
     }
 
-  
     function refreshUserList() {
       const users = getUsers();
       const userList = document.getElementById('userList');
@@ -419,11 +408,17 @@
       userList.innerHTML = Object.entries(users).map(([username, userData]) => {
         const role = userData.role || 'user';
         const isCurrent = username === currentUser;
+        const password = userData.password || 'нет пароля';
+        const regDate = new Date(userData.registeredAt).toLocaleDateString('ru-RU');
         
         return `
           <div class="user-item">
-            <div>
-              ${username} 
+            <div class="user-info">
+              <div class="user-details">
+                <div class="user-login">${username}</div>
+                <div class="user-password">Пароль: ${password}</div>
+                <div class="user-date">Зарегистрирован: ${regDate}</div>
+              </div>
               <span class="role-badge role-${role}">${ROLES[role]?.name || 'User'}</span>
               ${isCurrent ? '<span style="color:#86efac;font-size:11px">(Вы)</span>' : ''}
             </div>
@@ -438,9 +433,31 @@
           </div>
         `;
       }).join('');
+      
+      if (Object.keys(users).length === 0) {
+        userList.innerHTML = '<div class="small" style="text-align:center;padding:20px;color:#9fb0c9">Нет зарегистрированных пользователей</div>';
+      }
     }
 
-  
+    function showAllPasswords() {
+      const users = getUsers();
+      let message = "Все пользователи и их пароли:\n\n";
+      
+      Object.entries(users).forEach(([username, userData]) => {
+        const password = userData.password || 'нет пароля';
+        const role = ROLES[userData.role]?.name || 'Пользователь';
+        const regDate = new Date(userData.registeredAt).toLocaleDateString('ru-RU');
+        
+        message += `👤 ${username}\n`;
+        message += `🔑 Пароль: ${password}\n`;
+        message += `🎯 Роль: ${role}\n`;
+        message += `📅 Дата: ${regDate}\n`;
+        message += `────────────────────\n`;
+      });
+      
+      alert(message);
+    }
+
     function updateUserRole(username, newRole) {
       const users = getUsers();
       if (users[username]) {
@@ -453,22 +470,22 @@
       }
     }
 
-  
     function deleteUser(username) {
       if (username === getCurrent()) return;
       
-      const users = getUsers();
-      delete users[username];
-      setUsers(users);
-      
-      const stats = getStats();
-      delete stats[username];
-      setStats(stats);
-      
-      refreshUserList();
+      if (confirm(`Вы уверены, что хотите удалить пользователя ${username}?`)) {
+        const users = getUsers();
+        delete users[username];
+        setUsers(users);
+        
+        const stats = getStats();
+        delete stats[username];
+        setStats(stats);
+        
+        refreshUserList();
+      }
     }
 
-    
     function exportUsers() {
       const users = getUsers();
       const stats = getStats();
@@ -487,7 +504,6 @@
       URL.revokeObjectURL(url);
     }
 
-   
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const href = a.getAttribute('href');
@@ -552,11 +568,9 @@
           return;
         }
         
-        
         if (users[u] && users[u].password === p) {
           setCurrent(u);
           
-       
           const stats = getStats();
           if (!stats[u]) {
             stats[u] = { downloads: 0, joinDate: new Date().toISOString() };
@@ -574,7 +588,6 @@
       });
     }
 
-  
     const regForm = document.getElementById('registerForm');
     if (regForm) {
       regForm.addEventListener('submit', e => {
@@ -613,13 +626,12 @@
         }
         
         users[u] = {
-          password: p, 
+          password: p,
           role: 'user',
           registeredAt: new Date().toISOString()
         };
         setUsers(users);
         
-      
         const stats = getStats();
         stats[u] = {
           downloads: 0,
@@ -638,7 +650,6 @@
       });
     }
 
-   
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
