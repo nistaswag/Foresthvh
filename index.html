@@ -39,6 +39,31 @@
     .forest-banner{margin-top:30px;padding:16px;background:rgba(34,197,94,0.1);border-left:4px solid #22c55e;border-radius:8px;text-align:center;color:#bbf7d0}
     .forest-banner a{color:#4ade80;text-decoration:none;font-weight:600}
     .forest-banner a:hover{text-decoration:underline}
+    
+    
+    .role-badge{display:inline-block;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-left:8px}
+    .role-developer{background:linear-gradient(135deg,#7c3aed,#06b6d4);color:white}
+    .role-admin{background:linear-gradient(135deg,#dc2626,#ef4444);color:white}
+    .role-moderator{background:linear-gradient(135deg,#f59e0b,#eab308);color:black}
+    .role-tester{background:linear-gradient(135deg,#10b981,#34d399);color:white}
+    .role-beta{background:linear-gradient(135deg,#8b5cf6,#a78bfa);color:white}
+    .role-media{background:linear-gradient(135deg,#ec4899,#f472b6);color:white}
+    .role-user{background:rgba(255,255,255,0.1);color:#cbd5e1}
+    
+    .admin-panel{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:16px;margin-top:16px}
+    .user-list{max-height:200px;overflow-y:auto;margin:12px 0}
+    .user-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.02);border-radius:6px;margin-bottom:6px}
+    .user-actions{display:flex;gap:6px}
+    .user-actions select{padding:4px 8px;border-radius:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e6eef8}
+    .user-actions button{padding:4px 8px;border-radius:4px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;cursor:pointer}
+    .user-actions button:hover{background:rgba(239,68,68,0.3)}
+    
+    .profile-section{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+    .profile-info{background:rgba(255,255,255,0.02);padding:16px;border-radius:10px}
+    .profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+    .stat-item{text-align:center;padding:12px;background:rgba(255,255,255,0.02);border-radius:8px}
+    .stat-value{font-size:20px;font-weight:700;color:#06b6d4}
+    .stat-label{font-size:12px;color:#9fb0c9;margin-top:4px}
   </style>
 </head>
 <body>
@@ -55,9 +80,10 @@
         <a href="#features">Функции</a>
         <a href="#download">Скачать</a>
         <a href="#docs">Документация</a>
+        <a href="#profile">Профиль</a>
         <a href="#contact">Контакты</a>
-        <a href="#login">Войти</a>
-        <a href="#register">Регистрация</a>
+        <a href="#login" id="loginNav">Войти</a>
+        <a href="#register" id="registerNav">Регистрация</a>
       </nav>
     </header>
 
@@ -77,7 +103,7 @@
           <p>Быстрая установка, понятный интерфейс и встроенные Функции для пве . Идеален как для новичка так и для продвинутых пользователей.</p>
           <div class="btn-row">
             <a class="btn primary" id="downloadBtn" href="downloads/mods.zip" download rel="noopener">Скачать</a>
-            <a class="btn ghost" href="#docs">Читать документацию</a>
+            <a class="btn ghost" href="#docs">Читать документация</a>
           </div>
           <div style="margin-top:18px;color:#9fb0c9;font-size:13px">Поддержка Windows </div>
         </div>
@@ -91,6 +117,52 @@
           <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
           <p class="small">Если нужно, могу подготовить страницу с реальными ссылками для конкретного билда или пакетного менеджера.</p>
         </aside>
+      </section>
+
+   
+      <section id="profile" style="display:none">
+        <h3 style="color:#e6eef8;margin-bottom:12px">Профиль пользователя</h3>
+        <div class="profile-section">
+          <div class="profile-info">
+            <h4 id="profileUsername"></h4>
+            <div id="profileRole" style="margin-top:8px"></div>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-value" id="statDays">0</div>
+                <div class="stat-label">Дней с нами</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="statDownloads">0</div>
+                <div class="stat-label">Скачиваний</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="statRole">-</div>
+                <div class="stat-label">Уровень доступа</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Доступные функции</h4>
+            <div id="availableFeatures" style="margin-top:8px">
+              
+            </div>
+          </div>
+        </div>
+
+    
+        <div id="adminPanel" class="admin-panel" style="display:none">
+          <h4>Панель управления пользователями</h4>
+          <div class="small">Управление ролями и доступом пользователей</div>
+          
+          <div class="user-list" id="userList">
+          
+          </div>
+          
+          <div style="margin-top:12px">
+            <button class="btn primary" onclick="refreshUserList()">Обновить список</button>
+            <button class="btn ghost" onclick="exportUsers()">Экспорт данных</button>
+          </div>
+        </div>
       </section>
 
       <section id="features" aria-label="features" style="margin:28px 0">
@@ -187,133 +259,396 @@
     </footer>
   </div>
   <script>
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        const href=a.getAttribute('href');
-        if(href.length>1){
-          e.preventDefault();
-          const el=document.querySelector(href);
-          if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-        }
-      })
-    })
+  
+    const ROLES = {
+      'user': { name: 'Пользователь', level: 1 },
+      'beta': { name: 'Beta-тестер', level: 2 },
+      'tester': { name: 'Тестер', level: 3 },
+      'media': { name: 'Медиа', level: 4 },
+      'moderator': { name: 'Модератор', level: 5 },
+      'developer': { name: 'Разработчик', level: 10 },
+      'admin': { name: 'Администратор', level: 10 }
+    };
 
-    const funcInfo={
-      AutoWoodcut:{
-        title:'AutoWoodcut',
-        text:'Отличная функция для PvE: автоматически ищет и рубит деревья, подбирая лут. Настраивается задержка ударов и радиус поиска.'
-      },
-      AutoMine:{
-        title:'AutoMine',
-        text:'сама копает блоки!'
-      },
-      AutoBerry:{
-        title:'AutoBerry',
-        text:'автоматически собирает сладкие ягоды !'
-      },
-      AutoFish:{
-        title:'AutoFish',
-        text:'сама ловит рыбу!'
-      },
-      KillAuras:{
-        title:'KillAura',
-        text:'Топовая киллаура которая не баниться!'
+  
+    const lsKeyUsers = 'fc_users';
+    const lsKeyCurrent = 'fc_current_user';
+    const lsKeyStats = 'fc_user_stats';
+
+    
+    const getUsers = () => {
+      try {
+        return JSON.parse(localStorage.getItem(lsKeyUsers) || '{}');
+      } catch {
+        return {};
       }
     };
 
-    function selectFunc(key){
-      const data=funcInfo[key];
-      if(!data) return;
-      document.querySelectorAll('.func-item').forEach(b=>b.classList.remove('selected'));
-      const btn=document.querySelector(`.func-item[data-func="${key}"]`);
-      if(btn) btn.classList.add('selected');
-      document.getElementById('funcTitle').textContent=data.title;
-      document.getElementById('funcText').textContent=data.text;
-    }
+    const setUsers = (u) => localStorage.setItem(lsKeyUsers, JSON.stringify(u));
 
-    document.querySelectorAll('.func-item').forEach(b=>{
-      b.addEventListener('click',()=>selectFunc(b.dataset.func))
-    });
+    const getStats = () => {
+      try {
+        return JSON.parse(localStorage.getItem(lsKeyStats) || '{}');
+      } catch {
+        return {};
+      }
+    };
 
-    const lsKeyUsers='fc_users';
-    const lsKeyCurrent='fc_current_user';
-    const getUsers=()=>{try{return JSON.parse(localStorage.getItem(lsKeyUsers)||'{}')}catch{return {}}};
-    const setUsers=u=>localStorage.setItem(lsKeyUsers,JSON.stringify(u));
-    const setCurrent=u=>localStorage.setItem(lsKeyCurrent,u||'');
-    const getCurrent=()=>localStorage.getItem(lsKeyCurrent)||'';
-    async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+    const setStats = (s) => localStorage.setItem(lsKeyStats, JSON.stringify(s));
 
-    function updateAuthUI(){
-      const user=getCurrent();
-      const authState=document.getElementById('authState');
-      const text=document.getElementById('authStateText');
-      const loginSec=document.getElementById('login');
-      if(user){
-        text.textContent=`Вы вошли как ${user}`;
-        authState.style.display='block';
-        if(loginSec) loginSec.style.display='none';
-      }else{
-        authState.style.display='none';
-        if(loginSec) loginSec.style.display='grid';
+    const setCurrent = (u) => localStorage.setItem(lsKeyCurrent, u || '');
+    const getCurrent = () => localStorage.getItem(lsKeyCurrent) || '';
+
+  
+    function initializeAdmin() {
+      const users = getUsers();
+      if (!users['nistaswag']) {
+        users['nistaswag'] = {
+          password: 'bestdeveloper', 
+          role: 'developer',
+          registeredAt: new Date().toISOString()
+        };
+        setUsers(users);
+        
+        const stats = getStats();
+        stats['nistaswag'] = {
+          downloads: 0,
+          lastLogin: new Date().toISOString(),
+          joinDate: new Date().toISOString()
+        };
+        setStats(stats);
+        console.log('Создан пользователь nistaswag с ролью developer');
       }
     }
 
-    const loginForm=document.getElementById('loginForm');
-    if(loginForm){
-      loginForm.addEventListener('submit',async e=>{
+ 
+    function updateAuthUI() {
+      const user = getCurrent();
+      const authState = document.getElementById('authState');
+      const text = document.getElementById('authStateText');
+      const loginSec = document.getElementById('login');
+      const profileSec = document.getElementById('profile');
+      const loginNav = document.getElementById('loginNav');
+      const registerNav = document.getElementById('registerNav');
+
+      if (user) {
+        const users = getUsers();
+        const userData = users[user];
+        const role = userData?.role || 'user';
+        const roleName = ROLES[role]?.name || 'Пользователь';
+        
+        text.innerHTML = `Вы вошли как ${user} <span class="role-badge role-${role}">${roleName}</span>`;
+        authState.style.display = 'block';
+        if (loginSec) loginSec.style.display = 'none';
+        if (profileSec) profileSec.style.display = 'block';
+        if (loginNav) loginNav.style.display = 'none';
+        if (registerNav) registerNav.style.display = 'none';
+        
+        updateProfile(user);
+      
+        if (role === 'admin' || role === 'developer') {
+          document.getElementById('adminPanel').style.display = 'block';
+          refreshUserList();
+        } else {
+          document.getElementById('adminPanel').style.display = 'none';
+        }
+      } else {
+        authState.style.display = 'none';
+        if (loginSec) loginSec.style.display = 'grid';
+        if (profileSec) profileSec.style.display = 'none';
+        if (loginNav) loginNav.style.display = 'block';
+        if (registerNav) registerNav.style.display = 'block';
+        document.getElementById('adminPanel').style.display = 'none';
+      }
+    }
+
+  
+    function updateProfile(username) {
+      const users = getUsers();
+      const stats = getStats();
+      const userData = users[username];
+      const userStats = stats[username] || { downloads: 0, joinDate: new Date().toISOString() };
+      
+      const role = userData?.role || 'user';
+      const roleName = ROLES[role]?.name || 'Пользователь';
+      
+      document.getElementById('profileUsername').innerHTML = 
+        `${username} <span class="role-badge role-${role}">${roleName}</span>`;
+      
+      
+      const joinDate = new Date(userStats.joinDate || new Date());
+      const daysSinceJoin = Math.floor((new Date() - joinDate) / (1000 * 60 * 60 * 24));
+      
+      document.getElementById('statDays').textContent = daysSinceJoin;
+      document.getElementById('statDownloads').textContent = userStats.downloads || 0;
+      document.getElementById('statRole').textContent = ROLES[role]?.level || 1;
+      
+      
+      const featuresDiv = document.getElementById('availableFeatures');
+      const features = getAvailableFeatures(role);
+      featuresDiv.innerHTML = features.map(f => `<div class="small">✓ ${f}</div>`).join('');
+    }
+
+   
+    function getAvailableFeatures(role) {
+      const baseFeatures = ['AutoWoodcut', 'AutoMiner', 'AutoFarm'];
+      
+      switch(role) {
+        case 'developer':
+        case 'admin':
+          return [...baseFeatures, 'Все Beta-функции', 'Доступ к панели управления', 'Тестирование новых версий', 'Управление пользователями'];
+        case 'moderator':
+          return [...baseFeatures, 'Модерация пользователей', 'Beta-функции'];
+        case 'media':
+          return [...baseFeatures, 'Ранний доступ', 'Медиа-функции'];
+        case 'tester':
+          return [...baseFeatures, 'Тестирование новых функций'];
+        case 'beta':
+          return [...baseFeatures, 'Beta-функции'];
+        default:
+          return baseFeatures;
+      }
+    }
+
+  
+    function refreshUserList() {
+      const users = getUsers();
+      const userList = document.getElementById('userList');
+      const currentUser = getCurrent();
+      
+      userList.innerHTML = Object.entries(users).map(([username, userData]) => {
+        const role = userData.role || 'user';
+        const isCurrent = username === currentUser;
+        
+        return `
+          <div class="user-item">
+            <div>
+              ${username} 
+              <span class="role-badge role-${role}">${ROLES[role]?.name || 'User'}</span>
+              ${isCurrent ? '<span style="color:#86efac;font-size:11px">(Вы)</span>' : ''}
+            </div>
+            <div class="user-actions">
+              <select onchange="updateUserRole('${username}', this.value)" ${isCurrent ? 'disabled' : ''}>
+                ${Object.entries(ROLES).map(([key, roleInfo]) => 
+                  `<option value="${key}" ${key === role ? 'selected' : ''}>${roleInfo.name}</option>`
+                ).join('')}
+              </select>
+              <button onclick="deleteUser('${username}')" ${isCurrent ? 'disabled' : ''}>×</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+  
+    function updateUserRole(username, newRole) {
+      const users = getUsers();
+      if (users[username]) {
+        users[username].role = newRole;
+        setUsers(users);
+        refreshUserList();
+        if (username === getCurrent()) {
+          updateAuthUI();
+        }
+      }
+    }
+
+  
+    function deleteUser(username) {
+      if (username === getCurrent()) return;
+      
+      const users = getUsers();
+      delete users[username];
+      setUsers(users);
+      
+      const stats = getStats();
+      delete stats[username];
+      setStats(stats);
+      
+      refreshUserList();
+    }
+
+    
+    function exportUsers() {
+      const users = getUsers();
+      const stats = getStats();
+      const data = {
+        users: users,
+        stats: stats,
+        exportDate: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'forest-client-users.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+   
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (href.length > 1) {
+          e.preventDefault();
+          const el = document.querySelector(href);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    const funcInfo = {
+      AutoWoodcut: {
+        title: 'AutoWoodcut',
+        text: 'Отличная функция для PvE: автоматически ищет и рубит деревья, подбирая лут. Настраивается задержка ударов и радиус поиска.'
+      },
+      AutoMiner: {
+        title: 'AutoMiner',
+        text: 'сама копает блоки!'
+      },
+      AutoFarm: {
+        title: 'AutoFarm',
+        text: 'автоматически собирает сладкие ягоды !'
+      },
+      AutoFish: {
+        title: 'AutoFish',
+        text: 'сама ловит рыбу!'
+      },
+      Waypoints: {
+        title: 'Waypoints',
+        text: 'Топовая киллаура которая не баниться!'
+      }
+    };
+
+    function selectFunc(key) {
+      const data = funcInfo[key];
+      if (!data) return;
+      document.querySelectorAll('.func-item').forEach(b => b.classList.remove('selected'));
+      const btn = document.querySelector(`.func-item[data-func="${key}"]`);
+      if (btn) btn.classList.add('selected');
+      document.getElementById('funcTitle').textContent = data.title;
+      document.getElementById('funcText').textContent = data.text;
+    }
+
+    document.querySelectorAll('.func-item').forEach(b => {
+      b.addEventListener('click', () => selectFunc(b.dataset.func));
+    });
+
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', e => {
         e.preventDefault();
-        const u=document.getElementById('loginUsername').value.trim();
-        const p=document.getElementById('loginPassword').value;
-        const users=getUsers();
-        const msg=document.getElementById('loginMsg');
-        msg.style.display='none';
-        if(!u||!p){msg.textContent='Введите имя и пароль';msg.style.display='block';return}
-        const hash=await sha256(p);
-        if(users[u]&&users[u].hash===hash){
+        const u = document.getElementById('loginUsername').value.trim();
+        const p = document.getElementById('loginPassword').value;
+        const users = getUsers();
+        const msg = document.getElementById('loginMsg');
+        msg.style.display = 'none';
+        
+        if (!u || !p) {
+          msg.textContent = 'Введите имя и пароль';
+          msg.style.display = 'block';
+          return;
+        }
+        
+        
+        if (users[u] && users[u].password === p) {
           setCurrent(u);
+          
+       
+          const stats = getStats();
+          if (!stats[u]) {
+            stats[u] = { downloads: 0, joinDate: new Date().toISOString() };
+          }
+          stats[u].lastLogin = new Date().toISOString();
+          setStats(stats);
+          
           updateAuthUI();
           loginForm.reset();
-          location.hash='#';
-        }else{
-          msg.textContent='Неверные имя пользователя или пароль';
-          msg.style.display='block';
+          location.hash = '#profile';
+        } else {
+          msg.textContent = 'Неверные имя пользователя или пароль';
+          msg.style.display = 'block';
         }
-      })
+      });
     }
 
-    const regForm=document.getElementById('registerForm');
-    if(regForm){
-      regForm.addEventListener('submit',async e=>{
+  
+    const regForm = document.getElementById('registerForm');
+    if (regForm) {
+      regForm.addEventListener('submit', e => {
         e.preventDefault();
-        const u=document.getElementById('regUsername').value.trim();
-        const p=document.getElementById('regPassword').value;
-        const p2=document.getElementById('regPassword2').value;
-        const users=getUsers();
-        const ok=document.getElementById('registerMsg');
-        const errColor='#fca5a5';
-        ok.style.display='none';
-        if(u.length<3){ok.textContent='Минимум 3 символа в имени';ok.style.color=errColor;ok.style.display='block';return}
-        if(p.length<6){ok.textContent='Минимум 6 символов в пароле';ok.style.color=errColor;ok.style.display='block';return}
-        if(p!==p2){ok.textContent='Пароли не совпадают';ok.style.color=errColor;ok.style.display='block';return}
-        if(users[u]){ok.textContent='Пользователь уже существует';ok.style.color=errColor;ok.style.display='block';return}
-        const hash=await sha256(p);
-        users[u]={hash};
+        const u = document.getElementById('regUsername').value.trim();
+        const p = document.getElementById('regPassword').value;
+        const p2 = document.getElementById('regPassword2').value;
+        const users = getUsers();
+        const ok = document.getElementById('registerMsg');
+        const errColor = '#fca5a5';
+        ok.style.display = 'none';
+        
+        if (u.length < 3) {
+          ok.textContent = 'Минимум 3 символа в имени';
+          ok.style.color = errColor;
+          ok.style.display = 'block';
+          return;
+        }
+        if (p.length < 6) {
+          ok.textContent = 'Минимум 6 символов в пароле';
+          ok.style.color = errColor;
+          ok.style.display = 'block';
+          return;
+        }
+        if (p !== p2) {
+          ok.textContent = 'Пароли не совпадают';
+          ok.style.color = errColor;
+          ok.style.display = 'block';
+          return;
+        }
+        if (users[u]) {
+          ok.textContent = 'Пользователь уже существует';
+          ok.style.color = errColor;
+          ok.style.display = 'block';
+          return;
+        }
+        
+        users[u] = {
+          password: p, 
+          role: 'user',
+          registeredAt: new Date().toISOString()
+        };
         setUsers(users);
+        
+      
+        const stats = getStats();
+        stats[u] = {
+          downloads: 0,
+          lastLogin: new Date().toISOString(),
+          joinDate: new Date().toISOString()
+        };
+        setStats(stats);
+        
         setCurrent(u);
         regForm.reset();
-        ok.textContent='Аккаунт создан, вы вошли';
-        ok.style.color='#86efac';
-        ok.style.display='block';
+        ok.textContent = 'Аккаунт создан, вы вошли';
+        ok.style.color = '#86efac';
+        ok.style.display = 'block';
         updateAuthUI();
-        location.hash='#';
-      })
+        location.hash = '#profile';
+      });
     }
 
-    const logoutBtn=document.getElementById('logoutBtn');
-    if(logoutBtn){
-      logoutBtn.addEventListener('click',()=>{setCurrent('');updateAuthUI()})
+   
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        setCurrent('');
+        updateAuthUI();
+        location.hash = '#';
+      });
     }
 
+    initializeAdmin();
     updateAuthUI();
   </script>
 </body>
