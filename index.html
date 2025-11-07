@@ -24,6 +24,7 @@
     .btn{display:inline-block;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:600}
     .btn.primary{background:#06b6d4;color:#04202a}
     .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#cbd5e1}
+    .btn.premium{background:linear-gradient(135deg,#f59e0b,#eab308);color:#000;font-weight:700}
     .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:18px;color:#e6eef8;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
     .card h3{margin-bottom:6px}
     .card p{color:#a7c0d8;font-size:14px}
@@ -68,6 +69,16 @@
     .stat-item{text-align:center;padding:12px;background:rgba(255,255,255,0.02);border-radius:8px}
     .stat-value{font-size:20px;font-weight:700;color:#06b6d4}
     .stat-label{font-size:12px;color:#9fb0c9;margin-top:4px}
+
+    .add-user-form{display:flex;gap:8px;margin-bottom:12px;align-items:flex-end}
+    .form-group{display:flex;flex-direction:column;gap:4px}
+    .form-group label{font-size:12px;color:#9fb0c9}
+    .form-input{padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e6eef8}
+
+    .premium-section{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(234,179,8,0.05));border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:16px;margin-top:16px}
+    .premium-features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+    .premium-feature{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(255,255,255,0.02);border-radius:6px}
+    .premium-icon{color:#f59e0b;font-size:16px}
   </style>
 </head>
 <body>
@@ -151,9 +162,64 @@
           </div>
         </div>
 
+        <div id="premiumSection" class="premium-section" style="display:none">
+          <h4 style="color:#f59e0b;margin-bottom:12px">⭐ Премиум версия</h4>
+          <p class="small" style="color:#fbbf24">Доступ к эксклюзивной версии клиента с расширенными функциями</p>
+          
+          <div class="premium-features">
+            <div class="premium-feature">
+              <span class="premium-icon">⚡</span>
+              <span class="small">Улучшенная производительность</span>
+            </div>
+            <div class="premium-feature">
+              <span class="premium-icon">🔒</span>
+              <span class="small">Приватные функции</span>
+            </div>
+            <div class="premium-feature">
+              <span class="premium-icon">🚀</span>
+              <span class="small">Ранний доступ к обновлениям</span>
+            </div>
+            <div class="premium-feature">
+              <span class="premium-icon">🎯</span>
+              <span class="small">Эксклюзивные моды</span>
+            </div>
+          </div>
+          
+          <div style="margin-top:16px">
+            <a class="btn premium" href="downloads/forest-client-premium.zip" download rel="noopener" onclick="incrementPremiumDownload()">
+              ⭐ Скачать Премиум версию
+            </a>
+            <div class="small" style="margin-top:8px;color:#fbbf24">Версия  0.7 — стабильная сборка с полным набором функций</div>
+          </div>
+        </div>
+
         <div id="adminPanel" class="admin-panel" style="display:none">
           <h4>Панель управления пользователями</h4>
           <div class="small">Все зарегистрированные пользователи системы</div>
+          
+          <div class="add-user-form">
+            <div class="form-group">
+              <label for="newUsername">Ник пользователя</label>
+              <input type="text" id="newUsername" class="form-input" placeholder="Введите ник" style="width:200px">
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Пароль</label>
+              <input type="text" id="newPassword" class="form-input" placeholder="Пароль" style="width:150px">
+            </div>
+            <div class="form-group">
+              <label for="newRole">Роль</label>
+              <select id="newRole" class="form-input">
+                <option value="user">Пользователь</option>
+                <option value="beta">Beta-тестер</option>
+                <option value="tester">Тестер</option>
+                <option value="media">Медиа</option>
+                <option value="moderator">Модератор</option>
+                <option value="developer">Разработчик</option>
+                <option value="admin">Администратор</option>
+              </select>
+            </div>
+            <button class="btn primary" onclick="addUserManually()" style="height:36px">Добавить</button>
+          </div>
           
           <div class="user-list" id="userList">
           </div>
@@ -162,6 +228,7 @@
             <button class="btn primary" onclick="refreshUserList()">Обновить список</button>
             <button class="btn ghost" onclick="exportUsers()">Экспорт данных</button>
             <button class="btn ghost" onclick="showAllPasswords()">Показать пароли</button>
+            <button class="btn ghost" onclick="importUsers()">Импорт данных</button>
           </div>
         </div>
       </section>
@@ -340,6 +407,14 @@
         if (registerNav) registerNav.style.display = 'none';
         
         updateProfile(user);
+        
+        const premiumSection = document.getElementById('premiumSection');
+        if (role === 'beta' || role === 'tester' || role === 'media' || role === 'moderator' || role === 'developer' || role === 'admin') {
+          premiumSection.style.display = 'block';
+        } else {
+          premiumSection.style.display = 'none';
+        }
+        
         if (role === 'admin' || role === 'developer') {
           document.getElementById('adminPanel').style.display = 'block';
           refreshUserList();
@@ -353,6 +428,7 @@
         if (loginNav) loginNav.style.display = 'block';
         if (registerNav) registerNav.style.display = 'block';
         document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('premiumSection').style.display = 'none';
       }
     }
 
@@ -386,18 +462,79 @@
       switch(role) {
         case 'developer':
         case 'admin':
-          return [...baseFeatures, 'Все Beta-функции', 'Доступ к панели управления', 'Тестирование новых версий', 'Управление пользователями'];
+          return [...baseFeatures, 'Все Beta-функции', 'Доступ к панели управления', 'Тестирование новых версий', 'Управление пользователями', 'Премиум версия'];
         case 'moderator':
-          return [...baseFeatures, 'Модерация пользователей', 'Beta-функции'];
+          return [...baseFeatures, 'Модерация пользователей', 'Beta-функции', 'Премиум версия'];
         case 'media':
-          return [...baseFeatures, 'Ранний доступ', 'Медиа-функции'];
+          return [...baseFeatures, 'Ранний доступ', 'Медиа-функции', 'Премиум версия'];
         case 'tester':
-          return [...baseFeatures, 'Тестирование новых функций'];
+          return [...baseFeatures, 'Тестирование новых функций', 'Премиум версия'];
         case 'beta':
-          return [...baseFeatures, 'Beta-функции'];
+          return [...baseFeatures, 'Beta-функции', 'Премиум версия'];
         default:
           return baseFeatures;
       }
+    }
+
+    function incrementPremiumDownload() {
+      const user = getCurrent();
+      if (user) {
+        const stats = getStats();
+        if (stats[user]) {
+          stats[user].downloads = (stats[user].downloads || 0) + 1;
+          setStats(stats);
+          updateProfile(user);
+        }
+      }
+    }
+
+    function addUserManually() {
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+      const role = document.getElementById('newRole').value;
+      
+      if (!username) {
+        alert('Введите ник пользователя');
+        return;
+      }
+      
+      if (!password) {
+        alert('Введите пароль');
+        return;
+      }
+      
+      const users = getUsers();
+      
+      if (users[username]) {
+        if (confirm(`Пользователь ${username} уже существует. Обновить данные?`)) {
+          users[username].password = password;
+          users[username].role = role;
+        } else {
+          return;
+        }
+      } else {
+        users[username] = {
+          password: password,
+          role: role,
+          registeredAt: new Date().toISOString()
+        };
+        
+        const stats = getStats();
+        stats[username] = {
+          downloads: 0,
+          lastLogin: new Date().toISOString(),
+          joinDate: new Date().toISOString()
+        };
+        setStats(stats);
+      }
+      
+      setUsers(users);
+      refreshUserList();
+      
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newPassword').value = '';
+      
+      alert(`Пользователь ${username} ${users[username] ? 'обновлен' : 'добавлен'}!`);
     }
 
     function refreshUserList() {
@@ -504,6 +641,33 @@
       URL.revokeObjectURL(url);
     }
 
+    function importUsers() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = event => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if (data.users) {
+              setUsers(data.users);
+              if (data.stats) setStats(data.stats);
+              refreshUserList();
+              alert('Данные успешно импортированы!');
+            } else {
+              alert('Неверный формат файла');
+            }
+          } catch (error) {
+            alert('Ошибка при импорте файла');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const href = a.getAttribute('href');
@@ -532,8 +696,8 @@
         title: 'AutoFish',
         text: 'сама ловит рыбу!'
       },
-      Waypoints: {
-        title: 'Waypoints',
+      Killaura: {
+        title: 'KillAura',
         text: 'Топовая киллаура которая не баниться!'
       }
     };
