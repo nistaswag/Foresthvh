@@ -79,6 +79,8 @@
     .premium-features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
     .premium-feature{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(255,255,255,0.02);border-radius:6px}
     .premium-icon{color:#f59e0b;font-size:16px}
+
+    .import-section{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:10px;padding:16px;margin-top:16px}
   </style>
 </head>
 <body>
@@ -193,6 +195,16 @@
           </div>
         </div>
 
+        <div id="importSection" class="import-section">
+          <h4 style="color:#3b82f6;margin-bottom:12px">📥 Импорт данных</h4>
+          <p class="small" style="color:#93c5fd">Если администратор выдал вам роль, импортируйте файл с данными чтобы войти в систему</p>
+          
+          <div style="margin-top:16px">
+            <button class="btn primary" onclick="importUsers()">Импортировать данные</button>
+            <div class="small" style="margin-top:8px;color:#93c5fd">Запросите у администратора файл forest-client-users.json</div>
+          </div>
+        </div>
+
         <div id="adminPanel" class="admin-panel" style="display:none">
           <h4>Панель управления пользователями</h4>
           <div class="small">Все зарегистрированные пользователи системы</div>
@@ -228,7 +240,6 @@
             <button class="btn primary" onclick="refreshUserList()">Обновить список</button>
             <button class="btn ghost" onclick="exportUsers()">Экспорт данных</button>
             <button class="btn ghost" onclick="showAllPasswords()">Показать пароли</button>
-            <button class="btn ghost" onclick="importUsers()">Импорт данных</button>
           </div>
         </div>
       </section>
@@ -241,7 +252,7 @@
             <button class="btn ghost func-item" data-func="AutoMiner">AutoMiner</button>
             <button class="btn ghost func-item" data-func="AutoFarm">AutoFarm</button>
             <button class="btn ghost func-item" data-func="AutoFish">AutoFish</button>
-            <button class="btn ghost func-item" data-func="Waypoints">Waypoints</button>
+            <button class="btn ghost func-item" data-func="Killaura">KillAura</button>
           </div>
           <div class="func-desc" id="funcDesc" style="min-height:120px">
             <h4 id="funcTitle" style="margin-bottom:6px;color:#e6eef8">Выберите функцию слева</h4>
@@ -652,10 +663,19 @@
           try {
             const data = JSON.parse(event.target.result);
             if (data.users) {
-              setUsers(data.users);
-              if (data.stats) setStats(data.stats);
+              const currentUsers = getUsers();
+              const mergedUsers = {...currentUsers, ...data.users};
+              setUsers(mergedUsers);
+              
+              if (data.stats) {
+                const currentStats = getStats();
+                const mergedStats = {...currentStats, ...data.stats};
+                setStats(mergedStats);
+              }
+              
               refreshUserList();
-              alert('Данные успешно импортированы!');
+              alert('Данные успешно импортированы! Теперь вы можете войти под своим аккаунтом.');
+              updateAuthUI();
             } else {
               alert('Неверный формат файла');
             }
